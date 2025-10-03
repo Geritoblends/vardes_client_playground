@@ -1,0 +1,3 @@
+#### Goals
+
+* Stateful plugin: 

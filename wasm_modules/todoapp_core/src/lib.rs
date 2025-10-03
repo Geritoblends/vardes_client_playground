@@ -1,8 +1,32 @@
-pub struct TodoCore {
-    db: sled::Db
+use once_cell::unsync::Lazy;
+
+#[repr(C)]
+struct String128 {
+    bytes: [u8; 128]
 }
 
-static TODO_CORE: Lazy<Mutex<Option<TodoCore>>> = Lazy::new(|| Mutex::new(None));
+#[repr(u8)]
+enum Priority {
+    Low,
+    Regular,
+    Urgent
+}
+
+struct Task {
+    id: Bytes12Id,
+    title: String,
+    priority: Priority,
+    completed: bool,
+    created_at: u32,
+}
+
+/* struct TodoCore {
+    db: DashMap<Bytes12Id, Task>,
+} */
+
+struct TodoCore {
+    db: RefCell<HashMap<Bytes12Id, Rc<RefCell<Task>>>>,
+}
 
 #[repr(C)]
 pub struct TaskMessage {
